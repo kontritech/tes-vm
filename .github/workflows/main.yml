@@ -1,0 +1,22 @@
+name: Run Docker on GitHub Actions
+
+on: [push]  # Gantilah dengan 'workflow_dispatch' jika ingin trigger manual
+
+jobs:
+  run-container:
+    runs-on: ubuntu-latest  # Mesin host dari GitHub
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Run Debian Docker Container
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            debian:bullseye \
+            bash -c "\
+              echo 'Halo dari dalam container!'; \
+              apt-get update && apt-get install -y curl; \
+              curl https://api.github.com"
